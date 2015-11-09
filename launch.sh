@@ -1,3 +1,8 @@
 #! /bin/bash
 
-aws ec2 run-instances --image-id $1 --count $2 --instance-type $3 --key-name $4 --security-group-ids $5 --subnet-id $6 --associate-public-ip-address --user-data file://install-env.sh --debug
+./cleanup.sh
+
+#declare an array in bash
+declare -a instanceARR
+mapfile -t instanceARR < < (aws ec2 run-instances --image-id ami-d05e75b8 --count $1 --instance-type t2.micro --key-name itmo444-virtualbox --security-group-ids sg- --subnet-id subnet-
+--associate-public-address --iam-instance-profile Name=phpdeveloperRole --user-data file://itmo444-env/install-webserver.sh --output table | grep InstanceId | sed "s/|//g" | tr -d ' ' | sed "s/InstanceId//g")
