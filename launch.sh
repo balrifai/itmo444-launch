@@ -42,4 +42,9 @@ METRIC2=(`aws autoscaling put-scaling-policy --policy-name itmo444pol2 --auto-sc
 aws cloudwatch put-metric-alarm --alarm-name AddCapacity --metric-name CPUUtilization --namespace AWS/EC2 --statistic Average --period 120 --threshold 30 --comparison-operator GreaterThanOrEqualToThreshold --dimensions "Name=AutoScalingGroupName,Value=balrifai-scaling" --evaluation-periods 2 --alarm-actions $METRIC1
 aws cloudwatch put-metric-alarm --alarm-name RemoveCapacity --metric-name CPUUtilization --namespace AWS/EC2 --statistic Average --period 120 --threshold 10 --comparison-operator LessThanOrEqualToThreshold --dimensions "Name=AutoScalingGroupName,Value=balrifai-scaling" --evaluation-periods 2 --alarm-actions $METRIC2 
 
-#create aws rds instance 
+#create aws rds subnet &  instance
+aws rds create-db-subnet-group --db-subnet-group-name mp1-dbsubnet --db-subnet-description "ITMO444 MP1 Subnet Group" --subnet-ids subnet-b92c7692 subnet-128b9865
+aws rds create-db-instance --db-name balrifai --db-instance-identifier itmo444-mp1 --db-instance-class db.t2.micro --engine MySQL --master-username balrifai --master-user-password ilovebunnies --allocated-storage 10 --vpc-security-group-ids sg-5bba5c3d --db-subnet-group-name mp1-dbsubnet --publicly-accessible
+
+aws rds wait db-instance-available --db-instance-identifier itmo444-mp1 
+
