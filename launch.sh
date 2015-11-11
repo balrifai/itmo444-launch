@@ -30,10 +30,10 @@ aws elb register-instances-with-load-balancer --load-balancer-name $2 --instance
 aws elb configure-health-check --load-balancer-name $2 --health-check Target=HTTP:80/index.html,Interval=30,UnhealthyThreshold=2,HealthyThreshold=2,Timeout=3
 
 #create launch config to launch instances
-aws autoscaling create-launch-configuration --launch-configuration-name balrifai-launch-config --image-id ami-d05e75b8 --key-name itmo444-virtualbox --security-groups sg-5bba5c3d --instance-type t2.micro --user-data file://install-webserver.sh --iam-instance-profile Name=phpdeveloperRole 
+aws autoscaling create-launch-configuration --launch-configuration-name balrifai-launch-config --image-id ami-d05e75b8 --key-name itmo444-virtualbox --security-groups sg-5bba5c3d --instance-type t2.micro --user-data file://install-webserver.sh --iam-instance-profile phpdeveloperRole 
 
 #create autoscaling group
-aws autoscaling create-autoscaling-group --autoscaling-group-name balrifai-scaling --launch-configuration-name balrifai-launch-config --load-balancer-names $2 --health-check-type ELB --min-size 3 --max-size 6 --desired-capacity 3 --default-cooldown 600 --health-check-grace-period 120 --vpc-zone-identifier subnet-b92c7692
+aws autoscaling create-auto-scaling-group --auto-scaling-group-name balrifai-scaling --launch-configuration-name balrifai-launch-config --load-balancer-names $2 --health-check-type ELB --min-size 3 --max-size 6 --desired-capacity 3 --default-cooldown 600 --health-check-grace-period 120 --vpc-zone-identifier subnet-b92c7692
 
 #create cloud watch metrics
 METRIC1=(`aws autoscaling put-scaling-policy --policy-name itmo444pol1 --auto-scaling-group-name balrifai-scaling --scaling-adjustment 1 --adjustment-type ChangeInCapacity`);
